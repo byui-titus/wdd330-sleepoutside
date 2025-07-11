@@ -1,5 +1,4 @@
 import { getLocalStorage } from "./utils.mjs";
-import { updateCartBadge } from "./cartBadge.js";
 
 function renderCartContents() {
     const cartItems = getLocalStorage("so-cart");
@@ -25,5 +24,23 @@ function cartItemTemplate(item) {
 
     return newItem;
 }
+/**
++ * Calculate and display the total price below the items.
++ * Assumes your HTML has:
++ *   <div class="cart-footer hide">
++ *     <p class="cart-total">Total: </p>
++ *   </div>
++ */
+function renderCartTotal() {
+    const cartItems = getLocalStorage("so-cart") || [];
+    const total = cartItems.reduce((sum, item) => sum + item.FinalPrice, 0);
+
+    const totalEl = document.querySelector(".cart-total");
+    const footer = document.querySelector(".cart-footer");
+    if (!totalEl || !footer) return;
+    totalEl.textContent = `Total: $${total.toFixed(2)}`;
+    footer.classList.toggle("hide", cartItems.length === 0);
+}
 
 renderCartContents();
+renderCartTotal();
