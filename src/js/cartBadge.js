@@ -1,5 +1,8 @@
 // js/cartBadge.js
 import { getLocalStorage } from "./utils.mjs";
+import { loadHeaderFooter } from "./utils.mjs";
+
+loadHeaderFooter();
 
 export function updateCartBadge() {
     const badge = document.getElementById("cart-count");
@@ -11,3 +14,5 @@ export function updateCartBadge() {
 }
 
 document.addEventListener("DOMContentLoaded", updateCartBadge);
+
+//document.addEventListener("headerReady", updateCartBadge);
