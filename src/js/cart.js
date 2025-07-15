@@ -3,45 +3,49 @@ import { loadHeaderFooter } from "./utils.mjs";
 
 loadHeaderFooter();
 
+const eur = (usd) =>
+  new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(
+    usd * 0.85,
+  );
+
 function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart");
-  const htmlItems = cartItems.map((item) => cartItemTemplate(item));
+  // ✅ ensure an array
+  const cartItems = getLocalStorage("so-cart") || [];
+
+  // If the cart is empty, show a friendly message
+  if (cartItems.length === 0) {
+    document.querySelector(".product-list").innerHTML =
+      "<p>Your cart is empty 😢</p>";
+    document.querySelector(".cart-footer").classList.add("hide");
+    return;
+  }
+
+  const htmlItems = cartItems.map(cartItemTemplate);
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
 }
 
 function cartItemTemplate(item) {
-  const newItem = `<li class="cart-card divider">
-  <a href="#" class="cart-card__image">
-    <img
-      src="${item.Image}"
-      alt="${item.Name}"
-    />
-  </a>
-  <a href="#">
-    <h2 class="card__name">${item.Name}</h2>
-  </a>
-  <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-  <p class="cart-card__quantity">qty: 1</p>
-  <p class="cart-card__price">$${item.FinalPrice}</p>
-</li>`;
-
-  return newItem;
+  return `
+    <li class="cart-card divider">
+      <a class="cart-card__image">
+        <img src="${item.Images.PrimaryMedium}" alt="${item.Name}" />
+      </a>
+      <h2 class="card__name">${item.Name}</h2>
+      <p class="cart-card__color">${item.Colors[0].ColorName}</p>
+      <p class="cart-card__quantity">qty: 1</p>
+      <p class="cart-card__price">${eur(item.FinalPrice)}</p>
+    </li>`;
 }
-/**
-+ * Calculate and display the total price below the items.
-+ * Assumes your HTML has:
-+ *   <div class="cart-footer hide">
-+ *     <p class="cart-total">Total: </p>
-+ *   </div>
-+ */
+
 function renderCartTotal() {
   const cartItems = getLocalStorage("so-cart") || [];
-  const total = cartItems.reduce((sum, item) => sum + item.FinalPrice, 0);
+  const totalUsd = cart.reduce((sum, i) => sum + i.FinalPrice, 0);
 
   const totalEl = document.querySelector(".cart-total");
   const footer = document.querySelector(".cart-footer");
   if (!totalEl || !footer) return;
-  totalEl.textContent = `Total: $${total.toFixed(2)}`;
+
+  totalEl.textContent = `Total: ${eur(totalUsd)}`;
   footer.classList.toggle("hide", cartItems.length === 0);
 }
 
