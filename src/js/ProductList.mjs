@@ -28,6 +28,7 @@ export default class ProductList {
         document.querySelector(".title").textContent = this.category;
     }
 
+
     renderList(list) {
         // const htmlStrings = list.map(productCardTemplate);
         // this.listElement.insertAdjacentHTML("afterbegin", htmlStrings.join(""));
@@ -35,6 +36,10 @@ export default class ProductList {
         // apply use new utility function instead of the commented code above
         renderListWithTemplate(productCardTemplate, this.listElement, list);
 
+    }
+    async initSearch(searchTerm) {
+        const list = await this.dataSource.searchProducts(searchTerm);
+        this.renderList(list);
     }
 
 }

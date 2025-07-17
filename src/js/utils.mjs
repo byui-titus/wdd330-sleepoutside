@@ -64,4 +64,21 @@ export async function loadHeaderFooter() {
     renderWithTemplate(headerTemplate, headerElement);
     renderWithTemplate(footerTemplate, footerElement);
     updateCartBadge();
+
+
+    setTimeout(() => {
+        const searchForm = document.querySelector("#search-form");
+        const searchInput = document.querySelector("#search-input");
+
+        if (searchForm && searchInput) {
+            searchForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    window.location.href = `/product_listing/index.html?search=${encodeURIComponent(searchTerm)}`;
+                }
+            });
+        }
+    }, 50);
+
 }
