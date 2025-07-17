@@ -20,7 +20,23 @@ export default class ProductDetails {
 
     addProductToCart() {
         const cartItems = getLocalStorage("so-cart") || [];
-        cartItems.push(this.product);
+        const existingIndex = cartItems.findIndex(
+            (item) => item.Id === this.product.Id
+        );
+
+        if (existingIndex > -1) {
+            // Product already in cart: increment quantity
+            const existingItem = cartItems[existingIndex];
+            const currentQty = existingItem.quantity || 1;
+            cartItems[existingIndex] = {
+                ...existingItem,
+                quantity: currentQty + 1,
+            };
+        } else {
+            // New product: add with quantity 1
+            const productToAdd = {...this.product, quantity: 1 };
+            cartItems.push(productToAdd);
+        }
         setLocalStorage("so-cart", cartItems);
         updateCartBadge();
     }
