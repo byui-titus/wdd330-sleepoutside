@@ -4,28 +4,28 @@ import { loadHeaderFooter } from "./utils.mjs";
 loadHeaderFooter();
 
 const eur = (usd) =>
-  new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(
-    usd * 0.85,
-  );
+    new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(
+        usd * 0.85,
+    );
 
 function renderCartContents() {
-  // ✅ ensure an array
-  const cartItems = getLocalStorage("so-cart") || [];
+    // ✅ ensure an array
+    const cartItems = getLocalStorage("so-cart") || [];
 
-  // If the cart is empty, show a friendly message
-  if (cartItems.length === 0) {
-    document.querySelector(".product-list").innerHTML =
-      "<p>Your cart is empty 😢</p>";
-    document.querySelector(".cart-footer").classList.add("hide");
-    return;
-  }
+    // If the cart is empty, show a friendly message
+    if (cartItems.length === 0) {
+        document.querySelector(".product-list").innerHTML =
+            "<p>Your cart is empty 😢</p>";
+        document.querySelector(".cart-footer").classList.add("hide");
+        return;
+    }
 
-  const htmlItems = cartItems.map(cartItemTemplate);
-  document.querySelector(".product-list").innerHTML = htmlItems.join("");
+    const htmlItems = cartItems.map(cartItemTemplate);
+    document.querySelector(".product-list").innerHTML = htmlItems.join("");
 }
 
 function cartItemTemplate(item) {
-  return `
+    return `
     <li class="cart-card divider">
       <a class="cart-card__image">
         <img src="${item.Images.PrimaryMedium}" alt="${item.Name}" />
@@ -38,15 +38,15 @@ function cartItemTemplate(item) {
 }
 
 function renderCartTotal() {
-  const cartItems = getLocalStorage("so-cart") || [];
-  const totalUsd = cart.reduce((sum, i) => sum + i.FinalPrice, 0);
+    const cartItems = getLocalStorage("so-cart") || [];
+    const totalUsd = cartItems.reduce((sum, i) => sum + i.FinalPrice, 0);
 
-  const totalEl = document.querySelector(".cart-total");
-  const footer = document.querySelector(".cart-footer");
-  if (!totalEl || !footer) return;
+    const totalEl = document.querySelector(".cart-total");
+    const footer = document.querySelector(".cart-footer");
+    if (!totalEl || !footer) return;
 
-  totalEl.textContent = `Total: ${eur(totalUsd)}`;
-  footer.classList.toggle("hide", cartItems.length === 0);
+    totalEl.textContent = `Total: ${eur(totalUsd)}`;
+    footer.classList.toggle("hide", cartItems.length === 0.0);
 }
 
 renderCartContents();
