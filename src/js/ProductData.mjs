@@ -1,13 +1,6 @@
 const baseURL =
     import.meta.env.VITE_SERVER_URL;
 
-function convertToJson(res) {
-    if (res.ok) {
-        return res.json();
-    } else {
-        throw new Error("Bad Response");
-    }
-}
 
 export default class ProductData {
     async getData(category) {
@@ -81,6 +74,9 @@ export default class ProductData {
         }
     }
     async checkout(payload) {
+        const baseURL =
+            import.meta.env.VITE_SERVER_URL || "https://wdd330-backend.onrender.com/";
+
         const options = {
             method: "POST",
             headers: {
@@ -88,6 +84,22 @@ export default class ProductData {
             },
             body: JSON.stringify(payload),
         };
-        return await fetch(`${baseURL}checkout/`, options).then(convertToJson);
+
+        try {
+            const response = await fetch(`${baseURL}checkout`, options);
+
+            if (!response.ok) {
+                const errorText = await response.text(); // Try to read full raw text of the error
+                console.error("Raw server error response:", errorText);
+                throw new Error(`Checkout failed: ${response.status} ${response.statusText}`);
+            }
+
+            return await response.json(); // Success: parse response JSON
+        } catch (err) {
+            console.error("Checkout error:", err);
+            throw err;
+        }
     }
+
+
 }

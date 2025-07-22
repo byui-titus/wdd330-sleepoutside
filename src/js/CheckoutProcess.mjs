@@ -82,8 +82,8 @@ export default class CheckoutProcess {
         const shipping = document.querySelector(`${this.outputSelector} #shipping`);
         const orderTotal = document.querySelector(`${this.outputSelector} #orderTotal`);
 
-        tax.innerText = `$${this.tax.toFixed(2)}`;
-        shipping.innerText = `$${this.shipping.toFixed(2)}`;
+        tax.innerText = `${eur(this.tax.toFixed(2))}`;
+        shipping.innerText = `${eur(this.shipping.toFixed(2))}`;
         orderTotal.innerText = `${eur(this.orderTotal.toFixed(2))}`;
     }
 
@@ -100,7 +100,19 @@ export default class CheckoutProcess {
 
         try {
             const response = await services.checkout(order);
-            console.log(response);
+            if (response.ok) {
+                // ✅ Clear form
+                formElement.reset();
+
+                // ✅ Clear cart from localStorage
+                localStorage.removeItem("so-cart");
+
+                // ✅ Optionally redirect to thank you page
+                //window.location.href = "/checkout/thankyou.html";
+            } else {
+                const errData = await response.json();
+                throw new Error(`Checkout failed: ${errData.message}`);
+            }
         } catch (err) {
             console.log(err);
         }
