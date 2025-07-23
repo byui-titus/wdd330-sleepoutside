@@ -82,3 +82,7 @@ export async function loadHeaderFooter() {
     }, 50);
 
 }
+// utils.mjs
+export function clearLocalStorage(key) {
+    localStorage.removeItem(key);
+}

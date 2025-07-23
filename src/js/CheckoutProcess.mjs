@@ -100,21 +100,26 @@ export default class CheckoutProcess {
 
         try {
             const response = await services.checkout(order);
+
             if (response.ok) {
-                // ✅ Clear form
+                // ✅ Save order details to localStorage for the thank you page
+                localStorage.setItem("lastOrder", JSON.stringify(order));
+
+                // ✅ Clear form inputs
                 formElement.reset();
 
-                // ✅ Clear cart from localStorage
-                localStorage.removeItem("so-cart");
+                // ✅ Clear the cart
+                localStorage.removeItem(this.key);
 
-                // ✅ Optionally redirect to thank you page
-                //window.location.href = "/checkout/thankyou.html";
+                // ✅ Redirect to thank you page
+                window.location.href = "thankyou.html";
             } else {
                 const errData = await response.json();
                 throw new Error(`Checkout failed: ${errData.message}`);
             }
         } catch (err) {
-            console.log(err);
+            console.error("Checkout error:", err);
+            alert("Something went wrong during checkout. Please try again.");
         }
     }
 }
