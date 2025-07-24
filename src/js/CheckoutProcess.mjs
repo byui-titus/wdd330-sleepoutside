@@ -1,4 +1,4 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 
 const services = new ProductData();
@@ -89,47 +89,31 @@ export default class CheckoutProcess {
 
     async checkout() {
         const formElement = document.forms["checkout"];
-        const order = formDataToJSON(formElement);
+        const json = formDataToJSON(formElement);
 
-        order.orderDate = new Date().toISOString();
-        order.orderTotal = this.orderTotal;
-        order.tax = this.tax;
-        order.shipping = this.shipping;
-        order.items = packageItems(this.list);
-        //console.log(order);
+        json.orderDate = new Date();
+        json.orderTotal = this.orderTotal;
+        json.tax = this.tax;
+        json.shipping = this.shipping;
+        json.items = packageItems(this.list);
+        console.log(json);
 
         try {
-            const response = await services.checkout(order);
+            const response = await services.checkout(json);
 
-            if (response.ok) {
-                // ✅ Save order details to localStorage for the thank you page
-                localStorage.setItem("lastOrder", JSON.stringify(order));
-
-                // ✅ Clear form inputs
-                formElement.reset();
-
-                // ✅ Clear the cart
-                localStorage.removeItem(this.key);
-
-                // ✅ Redirect to thank you page
-                window.location.href = "thankyou.html";
-            } else {
-                // ✅ Only parse JSON if Content-Type is JSON
-                const contentType = response.headers.get("content-type");
-                let errorMessage = "Checkout failed.";
-
-                if (contentType && contentType.includes("application/json")) {
-                    const errData = await response.json();
-                    errorMessage = `Checkout failed: ${errData.message || JSON.stringify(errData)}`;
-                } else {
-                    errorMessage = `Checkout failed: ${response.status} ${response.statusText}`;
-                }
-
-                throw new Error(errorMessage);
-            }
+            console.log(response);
+            // ✅ Save order details to localStorage for the thank you page
+            localStorage.setItem("lastOrder", JSON.stringify(json));
+            // ✅ Clear form inputs
+            formElement.reset();
+            // ✅ Clear the cart
+            localStorage.removeItem(this.key);
+            // ✅ Redirect to thank you page
+            window.location.href = "src/thank_you/index.htm";
         } catch (err) {
             console.error("Checkout error:", err);
             alert("Checkout failed. Please try again.");
         }
+
     }
 }
