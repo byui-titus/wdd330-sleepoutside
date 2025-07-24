@@ -1,4 +1,8 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import {
+    getLocalStorage,
+    alertMessage,
+    removeAllAlerts
+} from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 
 const services = new ProductData();
@@ -111,6 +115,10 @@ export default class CheckoutProcess {
             // ✅ Redirect to thank you page
             window.location.href = "src/thank_you/index.htm";
         } catch (err) {
+            removeAllAlerts();
+            for (let message in err.message) {
+                alertMessage(err.message[message]);
+            }
             console.error("Checkout error:", err);
             alert("Checkout failed. Please try again.");
         }
