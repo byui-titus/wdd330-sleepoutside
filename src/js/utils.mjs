@@ -87,14 +87,6 @@ export function clearLocalStorage(key) {
     localStorage.removeItem(key);
 }
 
-// set a listener for both touchend and click
-export function setClick(selector, callback) {
-    qs(selector).addEventListener("touchend", (event) => {
-        event.preventDefault();
-        callback();
-    });
-    qs(selector).addEventListener("click", callback);
-}
 export function alertMessage(message, scroll = true, duration = 3000) {
     const alert = document.createElement("div");
     alert.classList.add("alert");
