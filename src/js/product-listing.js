@@ -4,7 +4,6 @@ import ProductList from "./ProductList.mjs";
 
 loadHeaderFooter();
 
-
 const category = getParam("category");
 const searchTerm = getParam("search");
 
@@ -13,9 +12,9 @@ const element = document.querySelector(".product-list");
 const listing = new ProductList(category, dataSource, element);
 
 if (searchTerm) {
-    listing.initSearch(searchTerm); // implement this in ProductList
+  listing.initSearch(searchTerm); // implement this in ProductList
 } else {
-    listing.init();
+  listing.init();
 }
 
 listing.init();

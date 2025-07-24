@@ -115,7 +115,7 @@ export default class CheckoutProcess {
                 window.location.href = "thankyou.html";
             } else {
                 // ✅ Only parse JSON if Content-Type is JSON
-                const contentType = response ? .headers ? .get("content-type");
+                const contentType = response.headers.get("content-type");
                 let errorMessage = "Checkout failed.";
 
                 if (contentType && contentType.includes("application/json")) {
