@@ -114,12 +114,22 @@ export default class CheckoutProcess {
                 // ✅ Redirect to thank you page
                 window.location.href = "thankyou.html";
             } else {
-                const errData = await response.json();
-                throw new Error(`Checkout failed: ${errData.message}`);
+                // ✅ Only parse JSON if Content-Type is JSON
+                const contentType = response ? .headers ? .get("content-type");
+                let errorMessage = "Checkout failed.";
+
+                if (contentType && contentType.includes("application/json")) {
+                    const errData = await response.json();
+                    errorMessage = `Checkout failed: ${errData.message || JSON.stringify(errData)}`;
+                } else {
+                    errorMessage = `Checkout failed: ${response.status} ${response.statusText}`;
+                }
+
+                throw new Error(errorMessage);
             }
         } catch (err) {
             console.error("Checkout error:", err);
-            alert("Something went wrong during checkout. Please try again.");
+            alert("Checkout failed. Please try again.");
         }
     }
 }
