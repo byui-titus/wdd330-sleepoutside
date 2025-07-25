@@ -1,5 +1,8 @@
 // thankyou.js
 import { clearLocalStorage } from "./utils.mjs";
+import { loadHeaderFooter } from "./utils.mjs";
+
+loadHeaderFooter();
 
 document.addEventListener("DOMContentLoaded", () => {
   const order = JSON.parse(localStorage.getItem("lastOrder"));
