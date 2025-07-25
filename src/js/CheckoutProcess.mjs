@@ -113,7 +113,7 @@ export default class CheckoutProcess {
             // ✅ Clear the cart
             localStorage.removeItem(this.key);
             // ✅ Redirect to thank you page
-            window.location.href = "thank_you/index.html";
+            window.location.href = "/thank_you/index.html";
         } catch (err) {
             removeAllAlerts();
             for (let message in err.message) {
